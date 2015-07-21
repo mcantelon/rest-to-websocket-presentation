@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<!--
+  Google HTML5 slide template
+
+  Authors: Luke Mahé (code)
+           Marcin Wichary (code and design)
+           
+           Dominic Mazzoni (browser compatibility)
+           Charles Chen (ChromeVox support)
+
+  URL: http://code.google.com/p/html5slides/
+-->
+
+<html>
+  <head>
+    <title>Presentation</title>
+
+    <meta charset='utf-8'>
+    <script
+      src='slides.js'></script>
+  </head>
+  
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+    
+    
+  </style>
+
+  <body style='display: none'>
+
+    <section class='slides layout-regular template-default'>
+      
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+       
+      <article>
+        <h1>
+          Speeding Up Application Status Updates
+        </h1>
+        <p>Mike Cantelon</p>
+      </article>
+ 
+
+      <article>
+       <h3>
+          Our apps provide (kind of) real-time updates
+        </h3>
+        <ul>
+          <li>
+            <b>AtoM</b>: background job status, etc.
+          </li>
+          <li>
+            <b>Archivematica</b>: SIP/AIP processing status, etc.
+          </li>
+          <li>
+            <b>Binder</b>: can't remember, but probably something!
+          </li>
+        </ul>
+      </article>
+
+
+      <article>
+       <h3>
+          We currently use AJAX polling
+        </h3>
+        <br /><br /><br />
+        <img class='centered' src='images/thereyet-big.png'>
+      </article>
+
+
+      <article>
+       <h3>
+          AJAX polling cycle
+        </h3>
+        <br />
+        <img class='centered' src='images/cycle.png'>
+      </article>
+
+
+      <article>
+       <h3>
+          AJAX polling is slow
+        </h3>
+        <ul>
+          <li><b>Laggy</b>: done at an interval</li>
+          <li><b>Verbose</b>:
+            <ul>
+              <li>HTTP protocol adds overhead data for each
+                request/response</li>
+              <li>Entire state often sent when updating
+                (big problem with Archivematica dashboard)</li>
+            </ul>
+          </li>
+          <li><b>Noisy</b>: most responses return no new info</li>
+        </ul>
+      </article>
+
+
+      <article>
+       <h3>
+          Improving AJAX polling
+        </h3>
+        <ul>
+          <li>
+            Add ability to request a "diff" rather
+            than entire state
+          </li>
+          <li>
+            Add checksum of the entire state to "diff"
+            responses
+          </li>
+        </ul>
+      </article>
+
+
+      <article>
+       <h3>
+          An alternative
+        </h3>
+        <ul>
+          <li>
+             <b>Websocket</b> is a bidirectional protocal supported by
+             modern browsers
+          </li>
+          <li>
+            Eliminates need for polling: server can "push" data
+          </li>
+          <li>
+            Lightweight protocol, little overhead
+          </li>
+        </ul>
+        <br />
+        <img class='centered' src='images/websockets-logo.png'>
+      </article>
+
+
+      <article>
+        <h3>
+          Adding Websocket updating
+        </h3>
+        <ul>
+          <li>
+            Our app backends are written in two languages (Python and
+            PHP)
+          </li>
+          <li>
+            App backend needs to keep connection open to WebSocket client
+          </li>
+          <li>
+            PHP apps generally don't share state between requests
+          </li>
+          <li>
+            TLDR: it seems like it'd be a pain
+          </li>
+        </ul>
+      </article>
+ 
+
+      <article>
+       <h3>
+          Idea: REST (HTTP) to Websocket gateway
+        </h3>
+        <br />
+        <br />
+        <img class='centered' src='images/gateway.png'>
+      </article>
+
+
+      <article>
+        <h3>
+          Node.js'd be well-suited for this (or maybe Go?)
+        </h3>
+        <ul>
+          <li>
+            Easy to make REST APIs (Express, Hapi)
+          </li>
+          <li>
+            Easy Websocket (Socket.io)
+          </li>
+        </ul>
+          <p>   
+          <img class='centered' src='images/node.png'>
+        </p>
+      </article>
+
+
+      <article>
+       <h3>
+          Dreamland
+        </h3>
+        <ul>
+          <li>
+            Could add high-level dashboard for gauging activity of
+            multiple products/installations
+          </li>
+        </ul>
+        <br />
+        <img class='centered' src='images/dashboard.png'>
+      </article>
+
+
+      <article>
+       <h3>
+          Downside of gateway approach
+        </h3>
+        <ul>
+          <li>
+            Another technical requirement (Node.js or Go)
+          </li>
+          <li>
+            Another service that needs to be monitored
+          </li>
+          <li>
+            More code we need to write/maintain if nothing
+            suitable already exists
+          </li>
+        </ul>
+      </article>
+
+    </section>
+
+  </body>
+</html>
